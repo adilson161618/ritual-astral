@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ritual Astral</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#020617;color:#e0e7ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{background:#0f172a;border:2px solid #4f46e5;border-radius:25px;padding:36px 28px;width:100%;max-width:390px;text-align:center;box-shadow:0 0 40px rgba(79,70,229,0.35);}
+.stars{font-size:20px;letter-spacing:4px;margin-bottom:14px;opacity:0.8;}
+h2{color:#818cf8;font-size:21px;font-style:italic;margin-bottom:5px;}
+.sub{font-size:12px;opacity:0.6;margin-bottom:6px;line-height:1.5;}
+.compat-banner{background:#1e1b4b;border:1px solid #4f46e5;border-radius:12px;padding:12px;margin-bottom:18px;font-size:13px;color:#c7d2fe;line-height:1.5;}
+.compat-banner strong{color:#fbbf24;}
+input{display:block;width:100%;background:#1e293b;border:1px solid #334155;color:#e0e7ff;padding:13px 14px;border-radius:12px;margin-bottom:11px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;}
+input:focus{border-color:#4f46e5;}
+input::placeholder{color:#475569;}
+.btn{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;padding:15px;width:100%;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s;margin-top:4px;}
+.btn:active{opacity:0.85;}
+.btn-whats{background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;padding:14px;width:100%;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;}
+.btn-copy{background:#1e293b;color:#818cf8;border:1px solid #4f46e5;padding:10px;width:100%;border-radius:12px;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;}
+.hidden{display:none;}
+.loader{border:3px solid #1e293b;border-top:3px solid #4f46e5;border-radius:50%;width:44px;height:44px;animation:spin 0.9s linear infinite;margin:24px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{color:#818cf8;font-size:13px;font-style:italic;opacity:0.8;margin-top:8px;}
+
+.vs-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0;}
+.avatar-box{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.avatar{width:68px;height:68px;background:#1e1b4b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #4f46e5;}
+.avatar-name{font-size:11px;color:#94a3b8;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vs-badge{font-size:18px;font-weight:700;color:#4f46e5;}
+.pct-big{font-size:30px;font-weight:700;color:#fbbf24;margin:8px 0 4px;}
+.pct-label{font-size:12px;color:#94a3b8;margin-bottom:10px;}
+.signo-row{display:flex;justify-content:center;gap:8px;margin-bottom:14px;}
+.signo-badge{display:inline-block;background:#1e1b4b;border:1px solid #4f46e5;border-radius:20px;padding:4px 12px;font-size:11px;color:#818cf8;}
+.frase{font-size:13px;font-style:italic;color:#c7d2fe;line-height:1.6;background:#0a0f1e;border-radius:12px;padding:14px;margin:12px 0;}
+.share-box{background:#0a0f1e;border:1px solid #1e293b;border-radius:14px;padding:16px;margin-top:14px;}
+.share-box p{font-size:12px;color:#94a3b8;margin-bottom:10px;line-height:1.5;}
+.share-box strong{color:#fbbf24;}
+.link-preview{background:#1e293b;border-radius:8px;padding:8px 12px;font-size:10px;color:#475569;word-break:break-all;margin-bottom:8px;text-align:left;}
+.restart{background:transparent;color:#334155;border:none;font-size:11px;cursor:pointer;margin-top:14px;text-decoration:underline;font-family:inherit;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#059669;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+
+.admin-link{position:fixed;bottom:8px;right:10px;font-size:11px;color:#1e293b;cursor:pointer;user-select:none;}
+#admin-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:16px;overflow-y:auto;}
+#admin-panel .inner{background:#0f172a;border-radius:16px;padding:20px;max-width:650px;margin:0 auto;}
+#admin-panel h3{color:#818cf8;margin-bottom:12px;font-size:16px;}
+#admin-panel table{width:100%;border-collapse:collapse;font-size:10px;}
+#admin-panel th{background:#1e293b;color:#94a3b8;padding:7px;text-align:left;}
+#admin-panel td{padding:6px 7px;border-bottom:1px solid #1e293b;color:#c7d2fe;}
+.close-admin{background:#4f46e5;color:#fff;border:none;padding:7px 16px;border-radius:8px;cursor:pointer;font-family:inherit;margin-bottom:12px;font-size:13px;}
+.export-btn{background:#059669;color:#fff;border:none;padding:7px 16px;border-radius:8px;cursor:pointer;font-family:inherit;margin-bottom:12px;margin-left:8px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">Link copiado! ✓</div>
+
+<div class="card">
+
+  <!-- TELA 1: formulário normal ou compatibilidade -->
+  <div id="tela1">
+    <div class="stars">✦ ✧ ✦</div>
+    <h2>Ritual Astral</h2>
+    <div id="compat-banner" class="compat-banner hidden"></div>
+    <p class="sub" id="sub-text">Descubra o que os astros revelam sobre você</p>
+    <input type="text" id="nome" placeholder="Seu nome completo"/>
+    <input type="date" id="data" placeholder="Data de nascimento"/>
+    <input type="tel" id="whatsapp" placeholder="WhatsApp (com DDD)"/>
+    <input type="email" id="email" placeholder="Seu melhor e-mail"/>
+    <button class="btn" onclick="processar()">✦ Alinhar os Astros ✦</button>
+  </div>
+
+  <!-- TELA LOADING -->
+  <div id="loading" class="hidden">
+    <div class="loader"></div>
+    <p class="loading-text" id="loading-text">Calculando sua sincronicidade cósmica...</p>
+  </div>
+
+  <!-- TELA RESULTADO -->
+  <div id="resultado" class="hidden">
+    <div class="stars">✦ ✧ ✦</div>
+
+    <!-- modo compatibilidade: mostra VS -->
+    <div id="vs-section" class="hidden">
+      <div class="vs-row">
+        <div class="avatar-box">
+          <div class="avatar" id="avatar-ref"></div>
+          <div class="avatar-name" id="nome-ref"></div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="avatar-box">
+          <div class="avatar" id="avatar-user"></div>
+          <div class="avatar-name" id="nome-user"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modo solo: avatar simples -->
+    <div id="solo-section" class="hidden">
+      <div class="avatar" style="margin:14px auto;" id="avatar-solo"></div>
+    </div>
+
+    <div class="pct-big" id="res-pct"></div>
+    <div class="pct-label" id="res-pct-label"></div>
+    <div class="signo-row" id="res-signos"></div>
+    <div class="frase" id="res-frase"></div>
+
+    <!-- caixa de compartilhamento -->
+    <div class="share-box">
+      <p>🌟 Seu mapa astral foi criado!<br/><strong>Compartilhe seu link</strong> e veja a compatibilidade com seus amigos:</p>
+      <div class="link-preview" id="link-preview"></div>
+      <button class="btn-whats" onclick="compartilharWhats()">💬 Compartilhar no WhatsApp</button>
+      <button class="btn-copy" onclick="copiarLink()">📋 Copiar link</button>
+    </div>
+
+    <button class="restart" onclick="reiniciar()">↩ Novo ritual</button>
+  </div>
+
+</div>
+
+<div class="admin-link" onclick="toggleAdmin()">⚙</div>
+<div id="admin-panel">
+  <div class="inner">
+    <h3>📋 Cadastros — Ritual Astral</h3>
+    <button class="close-admin" onclick="toggleAdmin()">✕ Fechar</button>
+    <button class="export-btn" onclick="exportCSV()">⬇ Exportar CSV</button>
+    <div id="admin-count" style="font-size:11px;color:#94a3b8;margin-bottom:10px;"></div>
+    <table>
+      <thead><tr><th>Data/Hora</th><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Nasc.</th><th>Signo</th><th>Ref. (veio de)</th></tr></thead>
+      <tbody id="admin-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const SHEET_URL='COLE_AQUI_A_URL_DO_GOOGLE_APPS_SCRIPT';
+const BASE_URL=window.location.href.split('?')[0];
+
+const SIGNOS=[
+  {nome:'Capricórnio',emoji:'🐐',m1:12,d1:22,m2:1,d2:19},
+  {nome:'Aquário',emoji:'🏺',m1:1,d1:20,m2:2,d2:18},
+  {nome:'Peixes',emoji:'🐟',m1:2,d1:19,m2:3,d2:20},
+  {nome:'Áries',emoji:'🐏',m1:3,d1:21,m2:4,d2:19},
+  {nome:'Touro',emoji:'🐂',m1:4,d1:20,m2:5,d2:20},
+  {nome:'Gêmeos',emoji:'👯',m1:5,d1:21,m2:6,d2:20},
+  {nome:'Câncer',emoji:'🦀',m1:6,d1:21,m2:7,d2:22},
+  {nome:'Leão',emoji:'🦁',m1:7,d1:23,m2:8,d2:22},
+  {nome:'Virgem',emoji:'🌾',m1:8,d1:23,m2:9,d2:22},
+  {nome:'Libra',emoji:'⚖️',m1:9,d1:23,m2:10,d2:22},
+  {nome:'Escorpião',emoji:'🦂',m1:10,d1:23,m2:11,d2:21},
+  {nome:'Sagitário',emoji:'🏹',m1:11,d1:22,m2:12,d2:21},
+];
+
+const COMPAT={
+  'Áries':      {alto:['Leão','Sagitário','Gêmeos','Aquário'],baixo:['Câncer','Capricórnio']},
+  'Touro':      {alto:['Virgem','Capricórnio','Câncer','Peixes'],baixo:['Leão','Aquário']},
+  'Gêmeos':     {alto:['Libra','Aquário','Áries','Leão'],baixo:['Virgem','Peixes']},
+  'Câncer':     {alto:['Escorpião','Peixes','Touro','Virgem'],baixo:['Áries','Libra']},
+  'Leão':       {alto:['Áries','Sagitário','Gêmeos','Libra'],baixo:['Touro','Escorpião']},
+  'Virgem':     {alto:['Touro','Capricórnio','Câncer','Escorpião'],baixo:['Gêmeos','Sagitário']},
+  'Libra':      {alto:['Gêmeos','Aquário','Leão','Sagitário'],baixo:['Câncer','Capricórnio']},
+  'Escorpião':  {alto:['Câncer','Peixes','Virgem','Capricórnio'],baixo:['Leão','Aquário']},
+  'Sagitário':  {alto:['Áries','Leão','Libra','Aquário'],baixo:['Virgem','Peixes']},
+  'Capricórnio':{alto:['Touro','Virgem','Escorpião','Peixes'],baixo:['Áries','Libra']},
+  'Aquário':    {alto:['Gêmeos','Libra','Sagitário','Áries'],baixo:['Touro','Escorpião']},
+  'Peixes':     {alto:['Câncer','Escorpião','Touro','Capricórnio'],baixo:['Gêmeos','Sagitário']},
+};
+
+const FRASES_COMPAT={
+  alto:[
+    'Uma conexão rara — os astros raramente alinham com tanta perfeição. Essa energia é transformadora.',
+    'Dois mapas que se completam. O que um tem, o outro busca. É harmonia em estado puro.',
+    'As estrelas confirmam: essa combinação tem potencial para algo memorável e único.',
+    'Frequências vibracionais em sintonia. Quando dois signos assim se encontram, o universo sorri.',
+  ],
+  medio:[
+    'Uma afinidade com camadas — na superfície pode parecer diferente, mas nas profundezas há muito em comum.',
+    'Os astros mostram potencial real. Com abertura e curiosidade, essa conexão pode surpreender.',
+    'Nem sempre o mais fácil é o mais significativo. Essa combinação tem profundidade.',
+  ],
+  baixo:[
+    'Os astros indicam polaridades — mas é exatamente aí que mora o fascínio. Opostos que se atraem.',
+    'Uma tensão criativa entre dois mapas diferentes. Às vezes o contraste é o que gera a faísca.',
+    'Os desafios dessa combinação são também os seus maiores aprendizados. Há crescimento aqui.',
+  ],
+};
+
+const FRASES_SOLO={
+  'Áries':'Sua chama interior ilumina caminhos que outros ainda não enxergam. Uma energia transformadora se aproxima.',
+  'Touro':'A terra que pisa é sagrada. Estabilidade e abundância caminham ao seu lado neste ciclo.',
+  'Gêmeos':'Sua mente é um universo em expansão. Uma conexão inesperada mudará sua perspectiva em breve.',
+  'Câncer':'As marés da intuição falam mais alto em você. Confie no que sente — os astros confirmam.',
+  'Leão':'Sua presença é magnética e inconfundível. O reconhecimento que merece está a caminho.',
+  'Virgem':'Nos detalhes que outros ignoram, você encontra o extraordinário. Precisão é seu superpoder.',
+  'Libra':'O equilíbrio que você busca está mais próximo do que imagina. Harmonia se manifesta.',
+  'Escorpião':'Nas profundezas da transformação, sua força verdadeira emerge. Nada fica igual depois de você.',
+  'Sagitário':'O horizonte te chama e os astros abrem o caminho. Uma aventura significativa se aproxima.',
+  'Capricórnio':'Sua determinação silenciosa constrói impérios. O que planta hoje, colherá com abundância.',
+  'Aquário':'Você chegou antes do tempo — e o mundo começa a perceber isso. Sua visão será validada.',
+  'Peixes':'Entre sonho e realidade, você navega com uma graça única. Uma revelação especial se aproxima.',
+};
+
+let meuLink='';
+let refData=null;
+
+function getSigno(dataStr){
+  const d=new Date(dataStr+'T12:00:00');
+  const m=d.getMonth()+1,dia=d.getDate();
+  for(const s of SIGNOS){
+    if(s.m1>s.m2){if((m===s.m1&&dia>=s.d1)||(m===s.m2&&dia<=s.d2))return s;}
+    else{if((m===s.m1&&dia>=s.d1)||(m>s.m1&&m<s.m2)||(m===s.m2&&dia<=s.d2))return s;}
+  }
+  return SIGNOS[0];
+}
+
+function calcPct(signo1,signo2){
+  const c=COMPAT[signo1.nome];
+  if(!c)return{pct:Math.floor(Math.random()*15)+80,nivel:'medio'};
+  if(c.alto.includes(signo2.nome)){return{pct:Math.floor(Math.random()*8)+90,nivel:'alto'};}
+  if(c.baixo.includes(signo2.nome)){return{pct:Math.floor(Math.random()*15)+65,nivel:'baixo'};}
+  return{pct:Math.floor(Math.random()*15)+78,nivel:'medio'};
+}
+
+function parseRef(){
+  const params=new URLSearchParams(window.location.search);
+  const ref=params.get('ref');
+  if(!ref)return null;
+  try{return JSON.parse(atob(ref));}catch(e){return null;}
+}
+
+function initPage(){
+  refData=parseRef();
+  if(refData){
+    const signoRef=getSigno(refData.nascimento);
+    document.getElementById('compat-banner').className='compat-banner';
+    document.getElementById('compat-banner').innerHTML=`<strong>${signoRef.emoji} ${refData.nome.split(' ')[0]}</strong> quer saber sua compatibilidade astral!<br/><span style="font-size:11px;opacity:0.8;">Preencha seus dados para descobrir o resultado.</span>`;
+    document.getElementById('sub-text').textContent='Seus dados de nascimento';
+    document.getElementById('loading-text').textContent='Calculando compatibilidade cósmica...';
+  }
+}
+
+function processar(){
+  const nome=document.getElementById('nome').value.trim();
+  const data=document.getElementById('data').value;
+  const whatsapp=document.getElementById('whatsapp').value.trim();
+  const email=document.getElementById('email').value.trim();
+  if(!nome)return alert('Digite seu nome.');
+  if(!data)return alert('Informe sua data de nascimento.');
+  if(!whatsapp)return alert('Informe seu WhatsApp.');
+  if(!email)return alert('Informe seu e-mail.');
+  document.getElementById('tela1').className='hidden';
+  document.getElementById('loading').className='';
+  const signoUser=getSigno(data);
+  const agora=new Date().toLocaleString('pt-BR');
+  const refNome=refData?refData.nome:'';
+  const registro={datetime:agora,nome,whatsapp,email,nascimento:data,signo:signoUser.nome,ref:refNome};
+  salvarLocal(registro);
+  enviarSheets(registro);
+  const payload=btoa(JSON.stringify({nome,nascimento:data,signo:signoUser.nome}));
+  meuLink=BASE_URL+'?ref='+payload;
+  setTimeout(()=>{
+    document.getElementById('loading').className='hidden';
+    document.getElementById('resultado').className='';
+    if(refData){
+      const signoRef=getSigno(refData.nascimento);
+      const{pct,nivel}=calcPct(signoRef,signoUser);
+      document.getElementById('vs-section').className='';
+      document.getElementById('solo-section').className='hidden';
+      document.getElementById('avatar-ref').textContent=signoRef.emoji;
+      document.getElementById('nome-ref').textContent=refData.nome.split(' ')[0];
+      document.getElementById('avatar-user').textContent=signoUser.emoji;
+      document.getElementById('nome-user').textContent=nome.split(' ')[0];
+      document.getElementById('res-pct').textContent=pct+'%';
+      document.getElementById('res-pct-label').textContent='de afinidade cósmica com '+refData.nome.split(' ')[0];
+      document.getElementById('res-signos').innerHTML=`<span class="signo-badge">${signoRef.emoji} ${signoRef.nome}</span><span style="color:#475569;font-size:12px;">×</span><span class="signo-badge">${signoUser.emoji} ${signoUser.nome}</span>`;
+      const frases=FRASES_COMPAT[nivel];
+      document.getElementById('res-frase').textContent='"'+frases[Math.floor(Math.random()*frases.length)]+'"';
+    } else {
+      document.getElementById('vs-section').className='hidden';
+      document.getElementById('solo-section').className='';
+      document.getElementById('avatar-solo').textContent=signoUser.emoji;
+      document.getElementById('res-pct').textContent=(Math.floor(Math.random()*8)+90)+'%';
+      document.getElementById('res-pct-label').textContent='de alinhamento cósmico · '+signoUser.nome;
+      document.getElementById('res-signos').innerHTML=`<span class="signo-badge">${signoUser.emoji} ${signoUser.nome}</span>`;
+      document.getElementById('res-frase').textContent='"'+(FRASES_SOLO[signoUser.nome]||'Os astros guardam algo especial para você.')+'"';
+    }
+    document.getElementById('link-preview').textContent=meuLink.length>60?meuLink.slice(0,60)+'...':meuLink;
+  },3200);
+}
+
+function compartilharWhats(){
+  const nome=document.getElementById('nome').value.trim().split(' ')[0];
+  const msg=refData
+    ? `✨ Fiz o Ritual Astral e vi nossa compatibilidade! Você também deveria fazer — descubra o que os astros dizem sobre você:\n\n${meuLink}`
+    : `✨ Acabei de fazer meu Ritual Astral! Descubra nossa compatibilidade cósmica — clica no meu link:\n\n${meuLink}`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+
+function copiarLink(){
+  navigator.clipboard.writeText(meuLink).then(()=>{
+    const t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2000);
+  }).catch(()=>{
+    prompt('Copie o link:',meuLink);
+  });
+}
+
+function reiniciar(){
+  window.location.href=BASE_URL;
+}
+
+function salvarLocal(r){
+  try{
+    const lista=JSON.parse(localStorage.getItem('astral_leads')||'[]');
+    lista.push(r);localStorage.setItem('astral_leads',JSON.stringify(lista));
+  }catch(e){}
+}
+
+async function enviarSheets(r){
+  if(SHEET_URL==='COLE_AQUI_A_URL_DO_GOOGLE_APPS_SCRIPT')return;
+  try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});}catch(e){}
+}
+
+function toggleAdmin(){
+  const p=document.getElementById('admin-panel');
+  if(p.style.display==='block'){p.style.display='none';return;}
+  const lista=JSON.parse(localStorage.getItem('astral_leads')||'[]');
+  document.getElementById('admin-count').textContent=lista.length+' cadastro(s) salvos localmente';
+  const tbody=document.getElementById('admin-tbody');tbody.innerHTML='';
+  if(!lista.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#475569;padding:16px;">Nenhum cadastro ainda.</td></tr>';p.style.display='block';return;}
+  lista.slice().reverse().forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.datetime}</td><td>${r.nome}</td><td>${r.whatsapp}</td><td>${r.email}</td><td>${r.nascimento}</td><td>${r.signo}</td><td>${r.ref||'—'}</td>`;
+    tbody.appendChild(tr);
+  });
+  p.style.display='block';
+}
+
+function exportCSV(){
+  const lista=JSON.parse(localStorage.getItem('astral_leads')||'[]');
+  if(!lista.length)return alert('Nenhum cadastro para exportar.');
+  let csv='Data/Hora,Nome,WhatsApp,E-mail,Nascimento,Signo,Ref\n';
+  lista.forEach(r=>{csv+=`"${r.datetime}","${r.nome}","${r.whatsapp}","${r.email}","${r.nascimento}","${r.signo}","${r.ref||''}"\n`;});
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ritual_astral_leads.csv';a.click();URL.revokeObjectURL(url);
+}
+
+initPage();
+</script>
+</body>
+</html>
